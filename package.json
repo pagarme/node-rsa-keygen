@@ -6,10 +6,7 @@
   "scripts": {
     "test": "mocha -R spec"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pagarme/node-rsa-keygen.git"
-  },
+  "repository": "pagarme/node-rsa-keygen",
   "keywords": [
     "rsa",
     "native",
@@ -27,5 +24,9 @@
   "devDependencies": {
     "mocha": "^2.0.1",
     "should": "^4.3.0"
-  }
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "gypfile": true
 }

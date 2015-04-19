@@ -1,5 +1,6 @@
 node-rsa-keygen
 ===============
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
 Generates a RSA keypair using native OpenSSL library.
 
@@ -39,3 +40,10 @@ var plaintext = crypto.privateDecrypt({
 }, result);
 // Hello world!
 ```
+
+[npm-image]: https://badge.fury.io/js/rsa-keygen.svg
+[npm-url]: https://npmjs.org/package/rsa-keygen
+[travis-image]: https://travis-ci.org/pagarme/node-rsa-keygen.svg?branch=master
+[travis-url]: https://travis-ci.org/pagarme/node-rsa-keygen
+[daviddm-image]: https://david-dm.org/pagarme/node-rsa-keygen.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/pagarme/node-rsa-keygen
