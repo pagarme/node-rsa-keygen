@@ -47,3 +47,4 @@ var plaintext = crypto.privateDecrypt({
 [travis-url]: https://travis-ci.org/pagarme/node-rsa-keygen
 [daviddm-image]: https://david-dm.org/pagarme/node-rsa-keygen.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/pagarme/node-rsa-keygen
+
