@@ -1,6 +1,6 @@
 {
   "name": "rsa-keygen",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Native RSA Keygen",
   "main": "build/Release/rsa_keygen.node",
   "scripts": {
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/pagarme/node-rsa-keygen",
   "dependencies": {
-    "nan": "^1.4.1"
+    "nan": "~2.0.9"
   },
   "devDependencies": {
     "mocha": "^2.0.1",

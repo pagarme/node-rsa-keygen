@@ -41,50 +41,47 @@ static RSA *generateKey(int num, unsigned long e) {
 #endif
 }
 
-static Handle<Object> toBuffer(BIO *bio) {
+static MaybeLocal<Object> toBuffer(BIO *bio) {
     char *data;
     long length = BIO_get_mem_data(bio, &data);
-    Local<Object> result = NanNewBufferHandle(length);
 
-    memcpy(Buffer::Data(result), data, length);
-
-    return result;
+	return Nan::CopyBuffer(data, length);
 }
 
-NAN_METHOD(Generate) {
-	NanScope();
+void Generate(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+	Nan::HandleScope scope;
 	
 	int modulusBits = 2048;
 	int exponent = 65537;
 
-	if (args[0]->IsInt32()) {
-		modulusBits = args[0]->ToInt32()->Value();
+	if (info[0]->IsInt32()) {
+		modulusBits = info[0]->ToInt32()->Value();
 	}
 
-	if (args[1]->IsInt32()) {
-		exponent = args[1]->ToInt32()->Value();
+	if (info[1]->IsInt32()) {
+		exponent = info[1]->ToInt32()->Value();
 	}
 
 	if (modulusBits < 512) {
-		NanThrowError(NanTypeError("Expected modulus bit count bigger than 512."));
-		NanReturnUndefined();
+		Nan::ThrowTypeError("Expected modulus bit count bigger than 512.");
+		return;
 	}
 
 	if (exponent < 0) {
-		NanThrowError(NanTypeError("Expected positive exponent."));
-		NanReturnUndefined();
+		Nan::ThrowTypeError("Expected positive exponent.");
+		return;
 	}
 
 	if ((exponent & 1) == 0) {
-		NanThrowError(NanTypeError("Expected odd exponent."));
-		NanReturnUndefined();
+		Nan::ThrowTypeError("Expected odd exponent.");
+		return;
 	}
 
 	RSA *rsa = generateKey(modulusBits, (unsigned int)exponent);
 
 	if (!rsa) {
-		NanThrowError(NanError("Failed creating RSA context."));
-		NanReturnUndefined();
+		Nan::ThrowError("Failed creating RSA context.");
+		return;
 	}
 
 	BIO *publicBio = BIO_new(BIO_s_mem());
@@ -101,8 +98,8 @@ NAN_METHOD(Generate) {
 
 		RSA_free(rsa);
 
-		NanThrowError(NanError("Failed to allocate OpenSSL buffers."));
-		NanReturnUndefined();
+		Nan::ThrowError("Failed to allocate OpenSSL buffers.");
+		return;
 	}
 
 	if (!PEM_write_bio_RSA_PUBKEY(publicBio, rsa)) {
@@ -110,8 +107,8 @@ NAN_METHOD(Generate) {
 		BIO_vfree(privateBio);
 		RSA_free(rsa);
 
-		NanThrowError(NanError("Failed exporting public key."));
-		NanReturnUndefined();
+		Nan::ThrowError("Failed exporting public key.");
+		return;
 	}
 
 	if (!PEM_write_bio_RSAPrivateKey(privateBio, rsa, NULL, NULL, 0, NULL, NULL)) {
@@ -119,27 +116,27 @@ NAN_METHOD(Generate) {
 		BIO_vfree(privateBio);
 		RSA_free(rsa);
 
-		NanThrowError(NanError("Failed exporting private key."));
-		NanReturnUndefined();
+		Nan::ThrowError("Failed exporting private key.");
+		return;
 	}
 
-	Handle<Object> publicKey = toBuffer(publicBio);
-	Handle<Object> privateKey = toBuffer(privateBio);
+	MaybeLocal<Object> publicKey = toBuffer(publicBio);
+	MaybeLocal<Object> privateKey = toBuffer(privateBio);
 
 	BIO_vfree(publicBio);
 	BIO_vfree(privateBio);
 	RSA_free(rsa);
 
-	Local<Object> result = NanNew<Object>();
+	Local<Object> result = Nan::New<Object>();
 
-	result->Set(NanNew<String>("public_key"), publicKey);
-	result->Set(NanNew<String>("private_key"), privateKey);
+	Nan::Set(result, Nan::New<String>("public_key").ToLocalChecked(), publicKey.ToLocalChecked());
+	Nan::Set(result, Nan::New<String>("private_key").ToLocalChecked(), privateKey.ToLocalChecked());
 
-	NanReturnValue(result);
+	info.GetReturnValue().Set(result);
 }
 
 void InitAll(Handle<Object> exports) {
-	exports->Set(NanNew<String>("generate"), NanNew<FunctionTemplate>(Generate)->GetFunction());
+	Nan::Set(exports, Nan::New<String>("generate").ToLocalChecked(), Nan::GetFunction(Nan::New<FunctionTemplate>(Generate)).ToLocalChecked());
 }
 
 NODE_MODULE(rsa_keygen, InitAll)
