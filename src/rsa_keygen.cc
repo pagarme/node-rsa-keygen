@@ -41,7 +41,7 @@ static RSA *generateKey(int num, unsigned long e) {
 #endif
 }
 
-static MaybeLocal<Object> toBuffer(BIO *bio) {
+static Nan::MaybeLocal<Object> toBuffer(BIO *bio) {
     char *data;
     long length = BIO_get_mem_data(bio, &data);
 
@@ -120,8 +120,8 @@ void Generate(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 		return;
 	}
 
-	MaybeLocal<Object> publicKey = toBuffer(publicBio);
-	MaybeLocal<Object> privateKey = toBuffer(privateBio);
+	Nan::MaybeLocal<Object> publicKey = toBuffer(publicBio);
+	Nan::MaybeLocal<Object> privateKey = toBuffer(privateBio);
 
 	BIO_vfree(publicBio);
 	BIO_vfree(privateBio);
