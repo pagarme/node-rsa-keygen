@@ -17,12 +17,12 @@ describe("rsa-keygen", function() {
 
 		it("should have a public key", function() {
 			keys.should.have.property("public_key");
-			keys.public_key.should.be.a.Buffer;
+			keys.public_key.should.be.an.instanceOf(Buffer);
 		});
 
 		it("should have a private key", function() {
 			keys.should.have.property("private_key");
-			keys.private_key.should.be.a.Buffer;
+			keys.private_key.should.be.an.instanceOf(Buffer);
 		});
 
 		if (crypto.publicEncrypt && crypto.privateDecrypt) {
