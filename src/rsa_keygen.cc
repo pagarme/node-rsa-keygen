@@ -50,16 +50,16 @@ static Nan::MaybeLocal<Object> toBuffer(BIO *bio) {
 
 void Generate(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 	Nan::HandleScope scope;
-	
+
 	int modulusBits = 2048;
 	int exponent = 65537;
 
 	if (info[0]->IsInt32()) {
-		modulusBits = info[0]->ToInt32()->Value();
+		modulusBits = Nan::To<v8::Int32>(info[0]).ToLocalChecked()->Value();
 	}
 
 	if (info[1]->IsInt32()) {
-		exponent = info[1]->ToInt32()->Value();
+		exponent = Nan::To<v8::Int32>(info[1]).ToLocalChecked()->Value();
 	}
 
 	if (modulusBits < 512) {
@@ -140,4 +140,3 @@ void InitAll(Handle<Object> exports) {
 }
 
 NODE_MODULE(rsa_keygen, InitAll)
-
