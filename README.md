@@ -18,24 +18,24 @@ npm install --save rsa-keygen
 ```
 
 ```javascript
-var rsaKeygen = require('rsa-keygen');
-var keys = rsaKeygen.generate();
+const rsaKeygen = require('rsa-keygen');
+const keys = rsaKeygen.generate();
 ```
 
 Example
 -------
 ```javascript
-var crypto = require('crypto');
-var rsaKeygen = require('rsa-keygen');
+const crypto = require('crypto');
+const rsaKeygen = require('rsa-keygen');
 
-var keys = rsaKeygen.generate();
+const keys = rsaKeygen.generate();
 
-var result = crypto.publicEncrypt({
+const result = crypto.publicEncrypt({
     key: keys.public_key
 }, new Buffer('Hello world!'));
 // <Crypted Buffer>
 
-var plaintext = crypto.privateDecrypt({
+const plaintext = crypto.privateDecrypt({
     key: keys.private_key
 }, result);
 // Hello world!
